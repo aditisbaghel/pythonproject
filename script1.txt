@@ -235,3 +235,38 @@ for chunk_df in chunk_iter:
 
 # After the loop, all chunks have been processed
 These are just a few examples of what you can do with pandas when processing data in chunks. Depending on your specific analysis and requirements, you can combine these operations to perform more complex data manipulations.
+
+
+
+import os
+from datetime import datetime
+
+def filter_files_by_date(file_list, from_date, to_date):
+    filtered_files = []
+
+    # Convert from_date and to_date to datetime objects
+    from_date = datetime.strptime(from_date, '%Y-%m-%d')
+    to_date = datetime.strptime(to_date, '%Y-%m-%d')
+
+    for file_name in file_list:
+        # Extract the date portion from the file name (assuming a specific naming pattern)
+        date_str = os.path.splitext(file_name)[0]  # Remove file extension
+        try:
+            file_date = datetime.strptime(date_str, '%Y-%m-%d')
+        except ValueError:
+            # Handle invalid date formats in file names, if needed
+            continue
+        
+        # Check if the file date is within the specified range
+        if from_date <= file_date <= to_date:
+            filtered_files.append(file_name)
+
+    return filtered_files
+
+# Example usage:
+file_list = ['file_2023-09-01.txt', 'file_2023-09-10.txt', 'file_2023-08-25.txt']
+from_date = '2023-09-01'
+to_date = '2023-09-09'
+
+result = filter_files_by_date(file_list, from_date, to_date)
+print(result)  # Output should be ['file_2023-09-01.txt']
